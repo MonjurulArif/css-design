@@ -1,0 +1,198 @@
+<!-- <body>
+ <div>I'm a speech bubble!</div>
+</body> -->
+
+<body>
+  <aside class="navitems lef">
+    <div class="nav-item-left selected">Home</div>
+    <div class="nav-item-left">About</div>
+    <div class="nav-item-left">Services</div>
+    <div class="nav-item-left">Contact</div>
+  </aside>
+  
+  
+  <aside class="right-navbar">
+    <div class="nav-item">Home</div>
+    <div class="nav-item selected">About</div>
+    <div class="nav-item">Services</div>
+    <div class="nav-item">Contact</div>
+  </aside>
+</body>
+
+
+/* body {
+    margin: 0px;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background-color: #e7d39f;
+  }
+div {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 80px;
+  background: #522d5b;
+  border-radius: 0 15px 15px 0;
+  color: white;
+}
+div:before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  left: 0;
+  height: 40px;
+  width: 40px;
+  border-bottom-left-radius: 50%;
+  background-color: transparent;
+}
+
+div:before {
+   box-shadow: 0 20px 0 0 #522d5b;
+}
+div:after {
+   box-shadow: 0 -20px 0 0 #522d5b;
+}
+div:after {
+  content: "";
+  position: absolute;
+  top: 80px;
+  left: 0;
+  height: 40px;
+  width: 40px;
+  border-top-left-radius: 50%;
+  background-color: transparent;
+}
+ */
+
+
+body {
+  margin: 0;
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: #e7d39f;
+}
+
+/* Right Sidebar */
+.right-navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  width: 150px;
+  padding: 20px 0;
+  background-color: #333;
+  height: 100%;
+}
+
+/* Common Nav Item Styling */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 10px); /* Adjust width to account for the right margin */
+  height: 50px;
+  color: white;
+  margin: 10px 0;
+  margin-right: 10px; /* Right margin for spacing */
+  cursor: pointer;
+}
+
+/* Selected Item with Speech Bubble Effect */
+.nav-item.selected {
+  background: #522d5b;
+  border-radius: 0 15px 15px 0;
+}
+
+/* Inverted Corner - Top Left for Selected Item */
+.nav-item.selected:before {
+  content: "";
+  position: absolute;
+  top: -25px;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border-bottom-left-radius: 50%;
+  background-color: transparent;
+  box-shadow: 0 20px 0 0 #522d5b;
+}
+
+/* Inverted Corner - Bottom Left for Selected Item */
+.nav-item.selected:after {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border-top-left-radius: 50%;
+  background-color: transparent;
+  box-shadow: 0 -20px 0 0 #522d5b;
+}
+
+
+/* Left Sidebar */
+.navitems.lef {
+  margin-right: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 150px;
+  padding: 20px 0;
+  background-color: #333;
+  height: 100%;
+}
+
+/* Common Nav Item Styling */
+.nav-item-left {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 10px); /* Adjust width to account for the left margin */
+  height: 50px;
+  color: white;
+  margin: 10px 0;
+  margin-left: 10px; /* Left margin for spacing */
+  cursor: pointer;
+  text-align: center; /* Center-align text */
+}
+
+/* Selected Item with Speech Bubble Effect */
+.nav-item-left.selected {
+  background: #522d5b;
+  border-radius: 15px 0 0 15px; /* Border radius on the left */
+}
+
+/* Inverted Corner - Top Right for Selected Item */
+.nav-item-left.selected:before {
+  content: "";
+  position: absolute;
+  top: -25px;
+  right: 0; /* Position on the right side */
+  height: 25px;
+  width: 25px;
+  border-bottom-right-radius: 50%;
+  background-color: transparent;
+  box-shadow: 0 20px 0 0 #522d5b;
+}
+
+/* Inverted Corner - Bottom Right for Selected Item */
+.nav-item-left.selected:after {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  right: 0; /* Position on the right side */
+  height: 25px;
+  width: 25px;
+  border-top-right-radius: 50%;
+  background-color: transparent;
+  box-shadow: 0 -20px 0 0 #522d5b;
+}
