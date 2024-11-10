@@ -1,0 +1,1017 @@
+@using WebPOS.ViewModel.Sales;
+
+@{
+    Layout = "~/Views/POS/Shared/_LayoutPOS.cshtml";
+}
+
+@model POSViewModel
+
+
+<style>
+ 
+
+    .card {
+        background-color: #232E4E;
+    }
+
+    .card-body {
+        border: 2px solid #c95c35;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .card-title {
+        color: black;
+    }
+
+    .nav-tabs .nav-item.show .nav-link,
+    .nav-tabs .nav-link.active {
+        background-color: #c95c35;
+        color: white;
+    }
+
+    #order-type-delivery {
+        opacity: 1;
+    }
+
+    .custom-badge {
+        color: black;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+    }
+
+    .runningtables {
+        background-color: lightgrey;
+        border: none;
+    }
+
+    .form-check-input[type="checkbox"].custom-switch-input {
+        width: 50px; /* Adjust width as needed */
+        height: 25px; /* Adjust height as needed */
+    }
+
+    .custom-switch-input:checked {
+        background-color: #c20e48;
+        border-color: #c20e48;
+    }
+
+/*     .form-check-input[type="checkbox"].custom-switch-input:checked {
+        background: linear-gradient(135deg, rgba(103, 43, 106, 1) 3%, rgba(135, 36, 92, 1) 38%, rgba(150, 30, 84, 1) 68%, rgba(167, 25, 75, 1) 98%);
+        border-color: #ffffff;
+    } */
+
+    .container{
+        background-color: #eae7f1;
+        height: 100%;
+    }
+
+    .left-aside-first {
+        /* background-color: #aa1849; */
+        background: linear-gradient(135deg, rgba(167, 25, 75, 1) 3%, rgba(150, 30, 84, 1) 38%, rgba(135, 36, 92, 1) 68%, rgba(103, 43, 106, 1) 98%);
+        /* opacity: 0.25; */
+        width: 7%;
+        height: 100%;
+        margin-top: 0px;
+        border-radius: 14px 0px 0px 14px;
+        float: left;
+        /* font-style: italic;      */
+    }
+
+    .left-aside-second {
+        background-color: #ffffff;
+        /* opacity: 0.25; */
+        width: 25%;
+        height: 100%;
+        margin-top: 0px;
+/*         border-radius: 14px 0px 0px 14px; */
+        float: left;
+    }
+
+    
+
+    .pos-body{
+        height: 100%;
+        border-radius: 14px;
+        border: red solid;
+        border-top: yellow solid;
+        margin: 60px 16px 0px 16px;
+    }
+
+
+</style>
+
+<style>
+
+    .nav-options {
+        padding-top: 0px;
+        margin-top: 0px;
+    }
+
+    .nav-item-left {
+        cursor: pointer;
+        font-size: 1rem;
+        color: #fff;
+        transition: background-color 0.8s, color 0.8s;
+        border-bottom: #a13f93 solid;
+        border-width: 1px;
+    }
+
+    .nav-item-left:first-child {
+        border-radius: 14px 0 0 0; /* Only top-left and top-right corners are rounded */
+    }
+
+    /* Active Option Styling */
+    .active-option {
+        background-color: #23163e;
+        color: #fa517f;
+    }
+
+    /* Hover Effect */
+    .nav-item-left:not(.active-option):hover {
+        background-color: #23163e;
+        color: #ff0;
+    }
+
+    /* Icon Styling */
+    .nav-item-left i {
+        font-size: 1.5rem;
+        color: inherit;
+        font-weight: bold;
+    }
+
+
+    .container-fluid{
+        height:10%;
+        padding-top: 16px;
+    }
+
+
+    .right-aside {
+        /* background-color: #23163e; */
+        background: #23163e;
+        width: 15%;
+        height: 100%;
+        margin-top: 0px;
+        border-radius: 0px 14px 14px 0px;
+        float: right;
+        transition: transform 0.3s ease;
+        color: whitesmoke;
+    }
+
+    .hamburger-container {
+        display: flex;
+        justify-content: flex-start;
+        padding: 0 10px 10px 10px;
+        gap: 80px;
+    }
+
+    .hamburger {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: whitesmoke;
+        cursor: pointer;
+    }
+
+
+    .right-aside.shrinked {
+        width: 55px; /* Adjust as per the hamburger's width */
+    }
+
+    .right-aside.shrinked .table-title {
+            margin-top: 50px;
+            margin-left: -10px;
+            font-size: 0.9em;
+    }
+
+    .right-aside.shrinked .nav-item {
+        opacity: 0;
+    }
+
+    .right-aside.shrinked .form-check-input {
+        margin-left: -50px;
+    }
+
+    .right-aside.shrinked .work-period-label {
+        display: none; /* Hide the label when the sidebar is shrinked */
+    }
+
+
+    .table-title {
+        font-weight: bold;
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+
+
+    nav-items-right {
+        transition: opacity 0.7s ease;
+        width: 95%;        
+        height: 100%;
+    }
+
+    /* Common Nav Item Styling */
+    .nav-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: calc(100% - 10px); /* Adjust width to account for the right margin */
+        height: 45px;
+        color: #e5dfef;
+        font-size: 18px;               
+        cursor: pointer;
+        
+    }
+
+        .nav-item:hover {  
+            cursor: pointer;
+            color: #ff0; 
+        }
+
+        /* Selected Item with Speech Bubble Effect */
+        .nav-item.selected {
+            border-radius: 0px 26px 26px 0px;
+            background: #ebe8f1;
+            color: #342a47; 
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.8s ease;
+        }
+
+            /* Inverted Corner - Top Left for Selected Item */
+            .nav-item.selected:before {
+                content: "";
+                position: absolute;
+                top: -40px;
+                left: 0;
+                height: 40px;
+                width: 40px;
+                border-bottom-left-radius: 50%;
+                background-color: transparent;
+                box-shadow: 0 20px 0 0 #ebe8f1;
+              } 
+
+            /* Inverted Corner - Bottom Left for Selected Item */
+            .nav-item.selected:after {
+                content: "";
+                position: absolute;
+                bottom: -40px;
+                left: 0;
+                height: 40px;
+                width: 40px;
+                border-top-left-radius: 50%;
+                background-color: transparent;
+                box-shadow: 0 -20px 0 0 #ebe8f1;
+            }
+</style>
+
+<main id="main2" class="main2">  
+    <div class="pos-body">
+
+
+
+        <aside class="left-aside-first">
+            <div class="nav-options d-flex flex-column">
+                @foreach (var tab in Model.ordertypeDetailsVM)
+                {
+                    <div id="bgc@tab.Id"
+                         class="nav-item-left @(tab == Model.ordertypeDetailsVM.First() ? "active-option" : "") d-flex flex-column justify-content-center align-items-center p-2"
+                         data-tab-id="@tab.Id"
+                         data-bs-toggle="tab"
+                         onclick="setActive(this)">
+
+                        <i class="@tab.Icon mb-1"></i> <!-- Assuming tab.Icon contains the appropriate icon class -->
+                        <span>@tab.Name</span>
+                    </div>
+                }
+
+
+            </div>
+        </aside>
+
+
+        <aside class="left-aside-second"  >
+            <div class="container-fluid ">                
+                <div class="form-check form-switch d-flex justify-content-between flex-sm-column">
+                    <input class="form-check-input custom-switch-input" type="checkbox" id="flexSwitchCheck1" data-wp-id="@ViewBag.WorkPeriodId" @(ViewBag.WorkPeriodId > 0 ? "checked" : "") onchange="handleCheckboxChange(this)">
+                    <label class="form-check-label px-3" for="flexSwitchCheck1" style="font-size:20px; color:#eb195d; font-weight: bold;">Work Period</label>
+                </div>
+            </div>        
+        </aside>
+
+
+        <aside class="right-aside">
+            <div class="container-fluid ">
+                <div class="form-check form-switch d-flex justify-content-between flex-sm-column">
+                    <input class="form-check-input custom-switch-input" type="checkbox" id="flexSwitchCheck1" data-wp-id="@ViewBag.WorkPeriodId" @(ViewBag.WorkPeriodId > 0 ? "checked" : "") onchange="handleCheckboxChange(this)">
+                    <label class="form-check-label px-3 work-period-label" for="flexSwitchCheck1" style="font-size:20px; color:#eb195d; font-weight: bold;">Work Period</label>
+                </div>
+            </div>
+            <div class="hamburger-container">
+                <div class="table-title text-uppercase pt-1 ps-0" style="color: #9b87c1">Tables</div><span><button class="hamburger" onclick="toggleNav()">
+                    ☰
+                </button></span>
+            </div>
+
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <div class="table-title text-uppercase" style="color: #9b87c1">Tables</div>
+            </div>
+            <div class="nav-items-right text-center">
+                <p class="nav-item selected" onclick="selectItem(this)">All Tables</p>
+                @foreach (var tableType in Model.orderTablesVM)
+                {
+                    <p class="nav-item" onclick="selectItem(this)">@tableType.TableTypeName</p>
+                }
+            </div>
+            
+
+
+        </aside>
+
+
+
+
+
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="nav nav-tabs nav-tabs-bordered" id="myTabs">
+                                @foreach (var tab in Model.ordertypeDetailsVM)
+                                {
+                                    <li id="bgc@tab.Id" class="nav-item">
+                                        <button id="@tab.OrderTypeId" data-tab-id="@tab.Id" class="nav-link @(tab == Model.ordertypeDetailsVM.First() ? "active" : "")" data-bs-toggle="tab" style="color:white">@tab.Name</button>
+                                    </li>
+                                }
+                                <li class="nav-item  ms-auto">
+
+                                        <div class="form-check form-switch">
+                                        <input class="form-check-input custom-switch-input" type="checkbox" id="flexSwitchCheck1" data-wp-id="@ViewBag.WorkPeriodId" @(ViewBag.WorkPeriodId > 0 ? "checked" : "") onchange="handleCheckboxChange(this)">
+                                        <label class="form-check-label  px-3" for="flexSwitchCheck1" style="font-size:15px; color:white "> Work Period</label>
+                                        </div>
+                                
+                                </li>
+                            </ul>
+                       
+                            <div class="row">
+                                <div class="tab-content pt-1 dinein-tab" style="height: 73vh;  overflow-y: auto;">
+                                    @foreach (var tab in Model.ordertypeDetailsVM)
+                                    {
+                                        <div class="tab-pane fade @(tab == Model.ordertypeDetailsVM.First() ? "show active" : "")" id="order-type-@tab.OrderTypeId">
+                                            @if (tab.OrderTypeId == 1)
+                                            {
+                                                if (Model.orderTablesVM != null)
+                                                {
+                                                    <div class="row mt-2">
+                                                        @foreach (var tableName in Model.orderTablesVM)
+                                                        {
+                                                            if (tableName.RunningTable == 0)
+                                                            {
+                                                                <div class="col-2 mb-0">
+                                                                    <div class="card text-center">
+                                                                        <div class="card-body" style="background-color: white">
+                                                                            <h5 class="card-title @tableName.Id table-clickable" data-runningtable-invoiceid="@tableName.RunningTable">@tableName.Name</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="col-2 mb-0">
+                                                                    <div class="card text-center">
+                                                                        <div class="card-body" style="background-color: #c95c35;">
+                                                                            <h5 class="card-title @tableName.Id table-clickable" style="color:white;" data-runningtable-invoiceid="@tableName.RunningTable">@tableName.Name</h5>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="tab-pane fade delivery-tab" id="order-type-delivery">
+                                <!-- Placeholder content for delivery -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="row mb-1" >
+                                <div class="col-6">
+                                    <span class="badge bg-success">Gross Total : ৳ @ViewBag.GrossTotal</span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="badge bg-success">Net Total : ৳ @ViewBag.NetTotal</span>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-6">
+                                    <span class="badge bg-success">Total SD : ৳ @ViewBag.TotalSD</span>
+                                </div>
+                                <div class="col-6">
+                                    <span class="badge bg-success">Total VAT : ৳ @ViewBag.TotalVAT</span>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-6">
+                                    <span class="badge bg-success">Total Ticket No : @ViewBag.TotalTicketNo</span>
+                                </div>
+                                <div class="col-6">
+                                
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="row" >
+                                <div class="col-5">
+                                    <button type="button" class="btn btn-primary" id="btnRunningTickets" style="background-color: #c95c35; border:none;">Running Tickets</button>
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-secondary" id="btnPrinted" style="background-color: #c95c35; border:none;">Printed</button>
+                                </div>
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-success" id="btnAllTickets" style="background-color: #c95c35; border:none;">All Tickets</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="tableContainer">
+                        <div class="content-container" style="height: 65vh; overflow-y: auto;">
+                            @foreach (var tables in Model.RunningTables)
+                            {
+                                <div class="card mb-1">
+                                    <div class="card-body runningtables" data-table-id="@tables.SlsTableId" data-table-name="@tables.TableName" data-invoice-id="@tables.InvoiceId" data-invoice-status="@tables.PrintStatus">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span style="font-size:12px;">Table Name</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span style="font-size:12px;">Invoice Code</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span style="font-size:12px;">Waiter Name</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span style="font-size:12px;" >@tables.TableName</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span style="font-size:10px;" >@tables.InvoiceCode</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span style="font-size:12px;">@tables.WaiterName</span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <span style="font-size:12px; font-weight:bold;">@tables.PrintStatus</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span style="font-size:10px; font-weight:bold;">@tables.PaymentMethod </span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span  style="font-size:16px; font-weight:bold;">৳ @tables.GrossAmount</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <ul class="nav nav-tabs nav-tabs-bordered" id="myTabs">
+                            @foreach (var tab in Model.ordertypeDetailsVM)
+                            {
+                                <li id="bgc@tab.Id" class="nav-item">
+                                    <button id="@tab.OrderTypeId" data-tab-id="@tab.Id" class="nav-link @(tab == Model.ordertypeDetailsVM.First() ? "active" : "")" data-bs-toggle="tab" style="color:white">@tab.Name</button>
+                                </li>
+                            }
+                            <li class="nav-item  ms-auto">
+
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input custom-switch-input" type="checkbox" id="flexSwitchCheck1" data-wp-id="@ViewBag.WorkPeriodId" @(ViewBag.WorkPeriodId > 0 ? "checked" : "") onchange="handleCheckboxChange(this)">
+                                    <label class="form-check-label  px-3" for="flexSwitchCheck1" style="font-size:15px; color:white "> Work Period</label>
+                                </div>
+
+                            </li>
+                        </ul>
+
+                        <div class="row">
+                            <div class="tab-content pt-1 dinein-tab" style="height: 73vh;  overflow-y: auto;">
+                                @foreach (var tab in Model.ordertypeDetailsVM)
+                                {
+                                    <div class="tab-pane fade @(tab == Model.ordertypeDetailsVM.First() ? "show active" : "")" id="order-type-@tab.OrderTypeId">
+                                        @if (tab.OrderTypeId == 1)
+                                        {
+                                            if (Model.orderTablesVM != null)
+                                            {
+                                                <div class="row mt-2">
+                                                    @foreach (var tableName in Model.orderTablesVM)
+                                                    {
+                                                        if (tableName.RunningTable == 0)
+                                                        {
+                                                            <div class="col-2 mb-0">
+                                                                <div class="card text-center">
+                                                                    <div class="card-body" style="background-color: white">
+                                                                        <h5 class="card-title @tableName.Id table-clickable" data-runningtable-invoiceid="@tableName.RunningTable">@tableName.Name</h5>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-2 mb-0">
+                                                                <div class="card text-center">
+                                                                    <div class="card-body" style="background-color: #c95c35;">
+                                                                        <h5 class="card-title @tableName.Id table-clickable" style="color:white;" data-runningtable-invoiceid="@tableName.RunningTable">@tableName.Name</h5>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    }
+
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="tab-pane fade delivery-tab" id="order-type-delivery">
+                            <!-- Placeholder content for delivery -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="row mb-1">
+                            <div class="col-6">
+                                <span class="badge bg-success">Gross Total : ৳ @ViewBag.GrossTotal</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="badge bg-success">Net Total : ৳ @ViewBag.NetTotal</span>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-6">
+                                <span class="badge bg-success">Total SD : ৳ @ViewBag.TotalSD</span>
+                            </div>
+                            <div class="col-6">
+                                <span class="badge bg-success">Total VAT : ৳ @ViewBag.TotalVAT</span>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-6">
+                                <span class="badge bg-success">Total Ticket No : @ViewBag.TotalTicketNo</span>
+                            </div>
+                            <div class="col-6">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-5">
+                                <button type="button" class="btn btn-primary" id="btnRunningTickets" style="background-color: #c95c35; border:none;">Running Tickets</button>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-secondary" id="btnPrinted" style="background-color: #c95c35; border:none;">Printed</button>
+                            </div>
+                            <div class="col-4">
+                                <button type="button" class="btn btn-success" id="btnAllTickets" style="background-color: #c95c35; border:none;">All Tickets</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" id="tableContainer">
+                    <div class="content-container" style="height: 65vh; overflow-y: auto;">
+                        @foreach (var tables in Model.RunningTables)
+                        {
+                            <div class="card mb-1">
+                                <div class="card-body runningtables" data-table-id="@tables.SlsTableId" data-table-name="@tables.TableName" data-invoice-id="@tables.InvoiceId" data-invoice-status="@tables.PrintStatus">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span style="font-size:12px;">Table Name</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span style="font-size:12px;">Invoice Code</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span style="font-size:12px;">Waiter Name</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span style="font-size:12px;">@tables.TableName</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span style="font-size:10px;">@tables.InvoiceCode</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span style="font-size:12px;">@tables.WaiterName</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <span style="font-size:12px; font-weight:bold;">@tables.PrintStatus</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span style="font-size:10px; font-weight:bold;">@tables.PaymentMethod </span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <span style="font-size:16px; font-weight:bold;">৳ @tables.GrossAmount</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+    <script>
+        var newProtocol = window.location.protocol;
+        var newHost = window.location.host;
+        var currentPathname = window.location.pathname;
+        currentPathname = currentPathname.replace("/Index/3", "");
+        var newURL = newProtocol + "//" + newHost + currentPathname;
+
+        // Left Nav Change: Dine In, Take Away , Delivery
+        function setActive(selectedItem) {
+            // Remove active-option class from all nav items
+            document.querySelectorAll('.nav-item-left').forEach(item => {
+                item.classList.remove('active-option');
+            });
+
+            // Add active-option class to the clicked item
+            selectedItem.classList.add('active-option');
+        }
+
+        function toggleNav() {
+            const aside = document.querySelector('.right-aside');
+            aside.classList.toggle('shrinked');
+        }
+
+        // function selectItem(element) {
+        //     // Remove 'active' class from all items
+        //     document.querySelectorAll('.selectable-item').forEach(item => {
+        //         item.classList.remove('active');
+        //     });
+
+        //     // Add 'active' class to the clicked item
+        //     element.classList.add('active');
+        // }
+
+        function selectItem(element) {
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => item.classList.remove('selected')); // Remove 'selected' class from all
+            element.classList.add('selected'); // Add 'selected' class to the clicked item
+        }
+
+        // function selectItem(element) {
+        //     // Remove active class from all items
+        //     document.querySelectorAll('.selectable-item').forEach(item => {
+        //         item.classList.remove('active');
+        //     });
+        //     // Add active class to the clicked item
+        //     element.classList.add('active');
+        // }
+
+
+
+
+
+
+        function handleCheckboxChange(checkbox) {
+            var isChecked = checkbox.checked;
+            var workPeriodId = checkbox.getAttribute('data-wp-id');
+            console.log("isChecked: ", isChecked, "newURL: ", newURL);
+            $.ajax({
+                url: newURL+'/WorkPeriodStartEndProcess', // Replace with your actual API endpoint
+                type: 'POST', // Adjust the HTTP method as needed
+                data: {
+                    isChecked: isChecked,
+                    workPeriodId: workPeriodId
+                },
+                success: function (response) {
+
+                    console.log('AJAX request successful:', response.jsonString);
+                    const jsonStringLength = response.jsonString.length;
+                    console.log("jsonStringLength: ", jsonStringLength);
+                    if (jsonStringLength > 0) {
+                        sendJsonStringToReports(response.jsonString)
+                    }
+                    newURL1 = newURL.replace("/POS", "");
+                    window.location.href = newURL1 + '/POS';
+
+                    // Perform actions based on the response if needed
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error making AJAX request:', error);
+                    // Handle errors or display an error message
+                }
+            });
+        }
+
+
+        async function sendJsonStringToReports(jsonString) {
+
+
+            currentPathname = currentPathname.replace("/POS", "");
+            var newURL = newProtocol + "//" + newHost + currentPathname + '/api/Storage/store';
+            console.log(newURL);
+
+            try {
+                let response = await fetch(newURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(jsonString)
+                });
+
+                if (response.ok) {
+                    let result = await response.json();
+                    let id = result.id;
+                    var customUrl = 'webpos://' + id;
+                    window.location.href = customUrl;
+                } else {
+                    console.error('Failed to store JSON data.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+
+        }
+
+
+        $(document).ready(function () {
+
+            $('#myTabs button').on('click', function () {
+                $('.tab-pane').html('');
+                
+                var activeTabId = $(this).attr('id');
+
+                const button = event.target;
+                const tabId = button.getAttribute("data-tab-id");
+                newURL1 = newURL.replace("/POS", "");
+                console.log("newURL1: ", newURL1);
+                $.ajax({
+                    url: newURL1+ '/POS/OrderTypeDetails',
+                    method: 'POST',
+                    data: { activeTabId: activeTabId, secondarytabid : tabId},
+                    success: function (result) {
+                        $('#order-type-' + activeTabId).empty();
+
+                        if (activeTabId == 1) {
+                            var divDelivery = document.querySelector('.dinein-tab');
+                            divDelivery.style.display = 'block';
+
+                            var divDelivery = document.querySelector('.delivery-tab');
+                            divDelivery.style.display = 'none';
+
+                            var orderTablesContent = '<div class="text-Left mt-2"></div><div class="row mt-2">';
+
+                            if (result.orderTablesVM && result.orderTablesVM.length > 0) {
+                                result.orderTablesVM.forEach(function (item) {
+                                    var itemName = item.name !== undefined && item.name !== null ? item.name : '';
+                                    var cardBackgroundColor = item.runningTable === 0 ? 'background-color: white' : 'background-color: #c95c35; color: white;';
+                                    var cardTitleColor = item.runningTable === 0 ? '' : 'color: white;';
+
+                                  
+
+                                    var cardTitle = '<h5 class="card-title ' + item.id + ' table-clickable"  data-runningtable-invoiceid="' + item.runningTable + '"  style="' + cardTitleColor + '">' + itemName + '</h5>';
+
+                                    //var cardTitle = '<h5 class="card-title   data-runningtable-invoiceid="' + item.runningTable + '"' + item.id + ' table-clickable" style="' + cardTitleColor + '">' + itemName + '</h5>';
+                                    orderTablesContent += '<div class="col-2 mb-0">' +
+                                        '<div class="card text-center">' +
+                                        '<div class="card-body" style="' + cardBackgroundColor + '">' +
+                                        cardTitle +
+                                        '</div></div></div>';
+                                });
+                            }
+
+                            orderTablesContent += '</div>';
+                            $('#order-type-' + activeTabId).html(orderTablesContent);
+                            console.log("orderTablesContent:", orderTablesContent);
+                            $('.table-clickable').click(function () {
+                                console.log("Clicked");
+                                if (@(ViewBag.WorkPeriodId) > 0) {
+                                    var itemName = $(this).text().trim();
+                                    var Id = $(this).attr('class').split(' ')[1];
+                                    newURL1 = newURL.replace("/POS", "");
+                                    window.location.href = newURL1 + '/POS_Sales/Index?tableName=' + encodeURIComponent(itemName) + '&tableId=' + encodeURIComponent(Id);
+                                }
+                            });
+                        }
+                        else if (activeTabId == 2) {
+                            var divDelivery = document.querySelector('.dinein-tab');
+                            divDelivery.style.display = 'none';
+
+                            var divDelivery = document.querySelector('.delivery-tab');
+                            divDelivery.style.display = 'block';
+
+                            var divDelivery = document.querySelector('.delivery-tab');
+                            divDelivery.style.height = '73vh';
+                           
+                            var orderTablesContent = '';
+                            if (result.deliveryParties && result.deliveryParties.length > 0) {
+                                orderTablesContent += '<div class="text-Left mt-2"></div><div class="row mt-2">';
+                                result.deliveryParties.forEach(function (item) {
+                                    var itemName = item.name !== undefined && item.name !== null ? item.name : '';
+                                    orderTablesContent += '<div class="col-3 mb-0">' +
+                                        '<div class="card text-center">' +
+                                        '<div class="card-body" style="background-color: white">' +
+                                        '<h5 class="card-title ' + item.id + '">' + itemName + '</h5>' +
+                                        '</div></div></div>';
+                                });
+                                orderTablesContent += '</div>';
+                            }
+                            
+                            $('#order-type-delivery').html(orderTablesContent);
+                            //$('#order-type-' + activeTabId).html(orderTablesContent);
+
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+
+                        $('#messageContainer').text('Error loading data.');
+                    }
+                });
+            });
+
+
+            // Click events handler for the Running Tables button
+            $('#btnRunningTickets').click(function () {
+                sendStatusToServer(2); 
+            });
+
+            $('#btnPrinted').click(function () {
+                sendStatusToServer(1);
+            });
+
+            $('#btnAllTickets').click(function () {
+                sendStatusToServer(0); 
+            });
+
+            function sendStatusToServer(status) {
+
+                newURL = newURL.replace("/POS", "");
+                console.log("newURL: ", newURL);
+                $.ajax({
+                    url: newURL + '/POS/GetRunningTableDetails',
+                    method: 'POST',
+                    data: { status: status },
+                    success: function (response) {
+                        //console.log(response);
+                        var container = $('#tableContainer').find('.content-container');
+                        if (container.length) {
+                            container.empty();
+                        }
+
+                        //container = $('#tableContainer').find('.content-container');
+
+                        $.each(response.runningTables, function (index, table) {
+
+                            var cardHtml = '<div class="card mb-1">' +
+                                '<div class="card-body runningtables" data-table-id="' + table.slsTableId + '" data-table-name="' + table.tableName + '" data-invoice-status="' + table.printStatus + '" data-invoice-id="' + table.invoiceId + '">' +
+                                                    '<div class="row">' +
+                                                        '<div class="col-md-4"><span style="font-size:12px;">Table Name:</span > </div>' +
+                                                        '<div class="col-md-4"><span style="font-size:12px;">Invoice Code:</span> </div>' +
+                                                        '<div class="col-md-4"><span style="font-size:12px;">Waiter Name:</span></div>' +
+                                                        
+                                                    '</div>' +
+                                                    '<div class="row">' +
+                                                        '<div class="col-md-4" style="font-size:12px;"> ' + table.tableName + '</div>' +
+                                                        '<div class="col-md-4" style="font-size:10px;">' + table.invoiceCode + '</div>' +
+                                                        '<div class="col-md-4" style="font-size:12px;">' + table.waiterName + '</div>' +
+                                                    '</div>' +
+                                                    '<div class="row">' +
+                                                        '<div class="col-md-4" style="font-size:12px; font-weight:bold;">' + table.printStatus + '</div>' +
+                                                        '<div class="col-md-4" style="font-size:10px; font-weight:bold;">' + table.paymentMethod + '</div>' +
+                                                        '<div class="col-md-4"><span  style="font-size:16px; font-weight:bold;">৳ ' + table.grossAmount + '</span></div>' +
+                                                    '</div>' +
+                                                '</div>' +
+                                           '</div>';
+
+                            container.append(cardHtml);
+                            
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending status:', error);
+                    }
+                });
+            }
+        });
+
+        
+    </script>
+
+
+    <script>
+        var newProtocol = window.location.protocol;
+        var newHost = window.location.host;
+        var currentPathname = window.location.pathname;
+        currentPathname = currentPathname.replace("/Index/3", "");
+        var newURL = newProtocol + "//" + newHost + currentPathname;
+
+        $(document).on('click', '.table-clickable, .runningtables', function () {
+            if (@(ViewBag.WorkPeriodId) > 0) {
+                var tableName = 0;
+                var tableId = 0;
+                var runningTableInvoiceId = 0;
+                var invoiceStatus = "";
+
+
+                if ($(this).hasClass('table-clickable')) {
+                    console.log("Clicked");
+                    tableName = $(this).text().trim();
+                    tableId = $(this).attr('class').split(' ')[1];
+                    runningTableInvoiceId = $(this).data('runningtable-invoiceid');
+                    
+
+                } else if ($(this).hasClass('runningtables')) {
+
+                    tableName = $(this).data('table-name');
+                    tableId = $(this).data('table-id');
+                    runningTableInvoiceId = $(this).data('invoice-id');
+                    invoiceStatus = $(this).data('invoice-status');  
+                }
+
+                newURL = newURL.replace("/POS", "");
+                console.log("newURL: ", newURL);
+                $.ajax({
+                    url: newURL + '/POS/SendTableToRedirect',
+                    type: 'POST',
+                    data: { tableName: tableName, tableId: tableId, runningTableInvoiceId: runningTableInvoiceId, invoiceStatus },
+                    success: function (response) {
+
+                        currentPathname = currentPathname.replace("/POS", "");
+                        newURL = newProtocol + "//" + newHost + currentPathname;
+                        window.location.href = newURL + '/POS_Sales/Index';
+                    },
+                    error: function () {
+                        console.error('Error setting table name.');
+                    }
+                });
+            }
+    });
+    </script>
+   
+   
+
+
+</main><!-- End #main -->
+
+
